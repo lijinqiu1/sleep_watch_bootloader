@@ -15,18 +15,18 @@
 #include "nrf_gpio.h"
 
 #define LED_START      18
-#define LED_0          18
-#define LED_1          19
+#define LED_0          7
+#define LED_1          6
 #define LED_STOP       19
 
 #define BUTTON_START   16
 #define BUTTON_0       16
-#define BUTTON_1       17
+#define BUTTON_1       30
 #define BUTTON_STOP    17
 #define BUTTON_PULL    NRF_GPIO_PIN_PULLUP
 
-#define RX_PIN_NUMBER  11  //13
-#define TX_PIN_NUMBER  9
+#define RX_PIN_NUMBER  25  //13
+#define TX_PIN_NUMBER  23
 #define CTS_PIN_NUMBER 10
 #define RTS_PIN_NUMBER 8
 #define HWFC           false

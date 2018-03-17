@@ -202,6 +202,7 @@ static void scheduler_init(void)
 int main(void)
 {
     uint32_t err_code;
+	uint8_t dfu_flag = 0;
     bool     bootloader_is_pushed = false;
     
 
@@ -216,18 +217,25 @@ int main(void)
     ble_stack_init();
     scheduler_init();
     bootloader_is_pushed = ((nrf_gpio_pin_read(BOOTLOADER_BUTTON_PIN) == 0)? true: false);
-    
-    if (bootloader_is_pushed || (!bootloader_app_is_valid(DFU_BANK_0_REGION_START)))
+    app_trace_log("botton %d\n",bootloader_is_pushed);
+//    if (bootloader_is_pushed || (!bootloader_app_is_valid(DFU_BANK_0_REGION_START)))
+	if (bootloader_is_pushed || (*(uint32_t *)DFU_BANK_0_REGION_START == 0xFFFFFFFF))
     {
-
+        nrf_gpio_pin_clear(LED_0);
         // Initiate an update of the firmware.
         err_code = bootloader_dfu_start();
+		dfu_flag = 1;
         APP_ERROR_CHECK(err_code);
 
     }
 
-    if (bootloader_app_is_valid(DFU_BANK_0_REGION_START))
+//    if (bootloader_app_is_valid(DFU_BANK_0_REGION_START))
+	if ((*(uint32_t *)DFU_BANK_0_REGION_START != 0xFFFFFFFF))
     {
+		if (dfu_flag && !bootloader_app_is_valid(DFU_BANK_0_REGION_START))
+		{
+			NVIC_SystemReset();
+		}
         nrf_gpio_pin_clear(LED_0);
         nrf_gpio_pin_clear(LED_1);
         // Select a bank region to use as application region.
